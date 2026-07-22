@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/your_database
+    username: your_username
+    password: your_password
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+
+  server:
+    port: 1111
+
+  liquibase:
+    change-log: classpath:liquibase/changes/db.changelog-master.yaml
+    enabled: true
