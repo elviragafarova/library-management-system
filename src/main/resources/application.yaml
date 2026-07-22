@@ -6,6 +6,10 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
 server:
   port: 1111
+
+liquibase:
+  change-log: classpath:liquibase/changes/db.changelog-master.yaml
+  enabled: true
