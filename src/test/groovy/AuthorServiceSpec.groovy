@@ -24,7 +24,9 @@ class AuthorServiceSpec extends Specification {
         authorService.createAuthor(authorRequest)
 
         then:
-        1 * authorRepository.save(_)
+        1 * authorRepository.save({
+            it.name == "Agatha Christie"
+        })
     }
 
     def "get author by id test"() {
@@ -43,6 +45,7 @@ class AuthorServiceSpec extends Specification {
         response.id == 1L
         response.name == "Agatha Christie"
 
+        1 * authorRepository.findById(1L)
     }
 
     def "author not found exception test"() {
@@ -53,11 +56,11 @@ class AuthorServiceSpec extends Specification {
         authorService.getAuthorById(1L)
 
         then:
-        thrown(AuthorNotFoundException)
+        def ex = thrown(AuthorNotFoundException)
+        ex.message == "Author not found with id: 1"
     }
 
-    def "should delete author successfully"() {
-
+    def "delete author test"() {
         given:
         def author = AuthorEntity.builder()
                 .id(1L)
@@ -71,6 +74,18 @@ class AuthorServiceSpec extends Specification {
 
         then:
         1 * authorRepository.delete(author)
+    }
+
+    def "delete author not found test"() {
+        given:
+        authorRepository.findById(1L) >> Optional.empty()
+
+        when:
+        authorService.deleteAuthor(1L)
+
+        then:
+        def ex = thrown(AuthorNotFoundException)
+        ex.message == "Author not found with id: 1"
     }
 
     def "update author test"() {
@@ -94,4 +109,19 @@ class AuthorServiceSpec extends Specification {
         response.name == "Agatha Christie"
     }
 
+    def "update author not found test"() {
+        given:
+        def request = AuthorRequest.builder()
+                .name("Agatha Christie")
+                .build()
+
+        authorRepository.findById(1L) >> Optional.empty()
+
+        when:
+        authorService.updateAuthor(1L, request)
+
+        then:
+        def ex = thrown(AuthorNotFoundException)
+        ex.message == "Author not found with id: 1"
+    }
 }
