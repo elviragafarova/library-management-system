@@ -24,6 +24,6 @@ public class AuthorEntity {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private List<BookEntity> books = new ArrayList<>();
 }

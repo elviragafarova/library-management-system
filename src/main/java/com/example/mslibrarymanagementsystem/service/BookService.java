@@ -35,10 +35,11 @@ public class BookService {
     }
 
     public Page<BookResponse> getBooks(PageCriteria pageCriteria) {
+        Sort.Direction direction = Sort.Direction.fromString(pageCriteria.getDirection());
         var pageable = PageRequest.of(
                 pageCriteria.getPage(),
                 pageCriteria.getCount(),
-                Sort.by(Sort.Direction.ASC, "id"));
+                Sort.by(direction, pageCriteria.getSortBy()));
         Page<BookEntity> books = bookRepository.findAll(pageable);
         return books.map(BookMapper::toResponse);
     }

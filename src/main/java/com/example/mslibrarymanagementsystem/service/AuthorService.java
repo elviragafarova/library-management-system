@@ -24,10 +24,11 @@ public class AuthorService {
     }
 
     public Page<AuthorResponse> getAuthors(PageCriteria pageCriteria) {
+        Sort.Direction direction = Sort.Direction.fromString(pageCriteria.getDirection());
         var pageable = PageRequest.of(
                 pageCriteria.getPage(),
                 pageCriteria.getCount(),
-                Sort.by(Sort.Direction.ASC, "id"));
+                Sort.by(direction, pageCriteria.getSortBy()));
         Page<AuthorEntity> authors = authorRepository.findAll(pageable);
         return authors.map(AuthorMapper::toResponse);
     }

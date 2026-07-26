@@ -28,6 +28,7 @@ public class BookMapper {
     public static void updateBook(BookEntity book, BookRequest request) {
         book.setIsbn(request.getIsbn());
         book.setTitle(request.getTitle());
+        book.setGenre(request.getGenre());
         book.setPublishedYear(request.getPublishedYear());
     }
 }
