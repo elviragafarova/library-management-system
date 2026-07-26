@@ -28,10 +28,11 @@ public class MemberService {
     }
 
     public Page<MemberResponse> getMembers(PageCriteria pageCriteria) {
+        Sort.Direction direction = Sort.Direction.fromString(pageCriteria.getDirection());
         var pageable = PageRequest.of(
                 pageCriteria.getPage(),
                 pageCriteria.getCount(),
-                Sort.by(Sort.Direction.ASC, "id"));
+                Sort.by(direction, pageCriteria.getSortBy()));
         Page<MemberEntity> members = memberRepository.findAll(pageable);
         return members.map(MemberMapper::toResponse);
     }

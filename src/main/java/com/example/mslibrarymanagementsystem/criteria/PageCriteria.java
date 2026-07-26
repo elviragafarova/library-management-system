@@ -10,4 +10,6 @@ import lombok.NoArgsConstructor;
 public class PageCriteria {
     private Integer page = 0;
     private Integer count = 10;
+    private String sortBy = "id";
+    private String direction = "asc";
 }

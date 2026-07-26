@@ -3,9 +3,11 @@ package com.example.mslibrarymanagementsystem.exceptions;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import java.util.stream.Collectors;
+
+import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -37,5 +39,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BookAlreadyReturnedException.class)
     public ErrorResponse handleException(BookAlreadyReturnedException ex) {
         return new ErrorResponse("book.already.returned", ex.getMessage());
+    }
+
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ErrorResponse handleException(MethodArgumentNotValidException ex) {
+
+        String message = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+
+        return new ErrorResponse("validation.failed", message);
     }
 }
